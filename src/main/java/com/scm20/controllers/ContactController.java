@@ -1,10 +1,12 @@
 package com.scm20.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.scm20.entities.Contact;
 import com.scm20.entities.User;
 import com.scm20.formdata.ContactFormData;
+import com.scm20.helper.AppConstants;
 import com.scm20.helper.HelperClass;
 import com.scm20.helper.Message;
 import com.scm20.helper.MessageType;
@@ -44,6 +47,9 @@ public class ContactController {
 
     @Autowired
     UserService userService;
+
+
+    private List<Contact> byUser;
 
 // method to show the view of add_contact form with the blank object
 @RequestMapping("/add")
@@ -105,6 +111,28 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
     return "redirect:/user/contacts/add";
 }
 
+
+
+  @RequestMapping()
+  public String viewContacts(Authentication authentication , Model  model,
+    @RequestParam(value = "page" , defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size,
+    @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+    @RequestParam(value = "direction", defaultValue="asc") String direction 
+      
+  ){
+
+    String email = HelperClass.getEmailOfLoggedInUser(authentication);
+
+    User user  = userService.getUserByEmail(email);
+
+      Page<Contact> pageContact = contactService.getByUser(user , page , size , sortBy , direction);
+
+    model.addAttribute("pageContact",pageContact);
+
+    model.addAttribute("pageSize",AppConstants.PAGE_SIZE);
+    return "user/view_contacts";
+  }
 
 
 }

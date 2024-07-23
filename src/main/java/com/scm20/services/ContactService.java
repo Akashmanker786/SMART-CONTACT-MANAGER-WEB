@@ -2,7 +2,10 @@ package com.scm20.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.scm20.entities.Contact;
+import com.scm20.entities.User;
 
 public interface ContactService {
 
@@ -19,5 +22,7 @@ public interface ContactService {
     List<Contact> search(String id , String email , String phoneNumber);
 
     List<Contact> getByUserId(String id);
+
+    Page<Contact> getByUser(User user , int page,int size ,String sortBy,String direction);
 
 }
