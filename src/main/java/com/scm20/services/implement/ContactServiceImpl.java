@@ -20,6 +20,7 @@ import lombok.var;
 @Service
 public class ContactServiceImpl implements ContactService{
 
+
     @Autowired
     ContactRepo contactRepo;
 
@@ -52,12 +53,7 @@ public class ContactServiceImpl implements ContactService{
        contactRepo.deleteById(id);  
     }
 
-    @Override
-    public List<Contact> search(String id, String email, String phoneNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'search'");
-    }
-
+    
     @Override
     public List<Contact> getByUserId(String id) {
        return contactRepo.findByUserId(id);    
@@ -72,6 +68,46 @@ public class ContactServiceImpl implements ContactService{
         var pageable = PageRequest.of(page,size,sort);
         return contactRepo.findByUser(user,pageable);
     }
+
+
+    @Override
+    public Page<Contact> searchByName(User user,String keyword, int noOfPage, int sizeOfPage, String sortBy, String direction) {
+       
+        Sort sort = direction.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        var pageable = PageRequest.of(noOfPage, sizeOfPage,sort);
+
+        return contactRepo.findByUserAndNameContaining(user,keyword,pageable);
+    }
+
+
+    @Override
+    public Page<Contact> searchByEmail(User user,String keyword, int noOfPage, int sizeOfPage, String sortBy, String direction) {
+       
+        Sort sort = direction.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        var pageable = PageRequest.of(noOfPage, sizeOfPage,sort);
+
+        return contactRepo.findByUserAndEmailContaining(user,keyword,pageable);
+  
+    }
+
+
+    @Override
+    public Page<Contact> searchByPhoneNumber(User user ,String keyword, int noOfPage, int sizeOfPage, String sortBy,
+            String direction) {
+               
+                Sort sort = direction.equals("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+                var pageable = PageRequest.of(noOfPage, sizeOfPage,sort);
+        
+                return contactRepo.findByUserAndPhoneNumberContaining(user,keyword,pageable);
+          
+
+            }
+
+
+
 
 
 }

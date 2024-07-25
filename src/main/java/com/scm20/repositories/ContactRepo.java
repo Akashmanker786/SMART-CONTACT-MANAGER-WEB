@@ -3,6 +3,7 @@ package com.scm20.repositories;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +20,14 @@ public interface ContactRepo extends JpaRepository<Contact,String> {
 
     @Query("SELECT c FROM Contact c WHERE c.user.userId = :userId")
     List<Contact> findByUserId(@Param("userId") String userId);
+
+
+    Page<Contact> findByUserAndNameContaining(User user,String keyword , Pageable pageable);
+
+    Page<Contact> findByUserAndEmailContaining(User user ,String keyword , Pageable pageable);
+
+    Page<Contact> findByUserAndPhoneNumberContaining(User user ,String keyword , Pageable pageable);
+
 
 
 
