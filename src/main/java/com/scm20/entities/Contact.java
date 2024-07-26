@@ -13,6 +13,8 @@ import lombok.Setter;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -40,6 +42,7 @@ public class Contact {
     private List<SocialLinks> socialLinks = new ArrayList<>();
 
     @ManyToOne()
+    @JsonIgnore
     private User user;
 
 

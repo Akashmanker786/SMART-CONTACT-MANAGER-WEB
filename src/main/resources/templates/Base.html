@@ -65,6 +65,8 @@ th:fragment="parent(content , title , script)"
     <!-- javascript starts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script th:src="@{'/js/script.js'}"></script>
      
     <th:block th:replace="${script}"></th:block>

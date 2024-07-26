@@ -20,21 +20,21 @@
       <div class="sm:pl-64 pt-20 mt-10">
         <div class="text-center" style="height: 1000px;">
           <h1 class="text-5xl">Search Results</h1>
-          <p th:text="${pageContact.totalElements} +' Results found'">     
-          </p>
+          <p th:text="${pageContact.totalElements} +' Results found'"></p>
 
           <div class="contacts-container p-3 mt-4">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-              <form th:action="@{'/user/contacts/search'}"
-              th:object="${searchFormData}"
+              <form
+                th:action="@{'/user/contacts/search'}"
+                th:object="${searchFormData}"
               >
                 <div
                   class="space-x-3 flex items-center justify-start flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
                 >
                   <div class="select-container">
                     <select
-                    th:field="*{field}"
-                    id="countries_disabled"
+                      th:field="*{field}"
+                      id="countries_disabled"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                       <option selected value="">Select Field</option>
@@ -154,9 +154,11 @@
 
                     <td class="px-6 py-4">
                       <div>
-                        <a href="#" class="px-0.5">
+                        <button
+                         th:onclick="loadContactData([[${c.id}]])">
                           <i class="fa-solid fa-eye"></i>
-                        </a>
+                        </button>
+                        
                         <a href="#" class="px-0.5">
                           <i class="fa-solid fa-pen-to-square"></i>
                         </a>
@@ -171,10 +173,10 @@
 
               <!-- pagination block -->
 
-              <div 
-              th:if="${pageContact.totalElements>0}"
-              class="page-container 
-              text-center p-3">
+              <div
+                th:if="${pageContact.totalElements>0}"
+                class="page-container text-center p-3"
+              >
                 <nav aria-label="Page navigation example">
                   <ul class="inline-flex -space-x-px text-base h-10">
                     <li th:unless="${pageContact.first}">
@@ -209,11 +211,19 @@
               </div>
             </div>
           </div>
-          <h1 th:if="${pageContact.totalElements<=0}" class="text-4xl text-center">No Result Found</h1>
+          <h1
+            th:if="${pageContact.totalElements<=0}"
+            class="text-4xl text-center"
+          >
+            No Result Found
+          </h1>
         </div>
+        <!-- view contact  model  -->
+        <div th:replace="~{user/view_contact_modal :: contact-modal}"></div>
       </div>
     </div>
 
+    <script data-th-src="@{/js/contacts.js}"></script>
     <script>
       console.log("this is script of profile page");
     </script>
