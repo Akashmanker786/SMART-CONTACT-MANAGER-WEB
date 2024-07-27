@@ -1,5 +1,7 @@
 package com.scm20.formdata;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,24 +18,26 @@ import lombok.ToString;
 @ToString
 public class ContactFormData {
 
-    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid Email Address [xyz@gmail.com]")
+    
     private String email;
 
-    @NotBlank(message = "Phone Number is required")
-    @Pattern(regexp = "^[0-9]{10}$",message = "invalid Phone Number")
+    
     private String phoneNumber;
 
-    @NotBlank(message = "Address is required")
+    
     private String address;
 
 
     private String picture;
     private String discription;
     private boolean favourite;
+
+
+
+    private MultipartFile contactImage;
+
 
 
     public void setFavourite(boolean value){

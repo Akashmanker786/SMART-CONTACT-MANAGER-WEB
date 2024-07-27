@@ -24,6 +24,7 @@ public class ContactServiceImpl implements ContactService{
     @Autowired
     ContactRepo contactRepo;
 
+
     @Override
     public Contact save(Contact contact) {
         String  contactId = UUID.randomUUID().toString();
@@ -34,9 +35,22 @@ public class ContactServiceImpl implements ContactService{
 
     @Override
     public Contact update(Contact contact) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+       
+       var newContact = contactRepo.findById(contact.getId()).orElseThrow(()->new ResourceNotFoundException("User not found"));
+
+       newContact.setName(contact.getName());
+       newContact.setEmail(contact.getEmail());
+       newContact.setPhoneNumber(contact.getPhoneNumber());
+       newContact.setAddress(contact.getAddress());
+       newContact.setDiscription(contact.getDiscription());
+       newContact.setFavourite(contact.getFavourite());
+       newContact.setPicture(contact.getPicture());
+    //    newContact.setCloudinaryImagePublicId(contact.getCloudinaryImagePublicId());
+    
+    //    picture update
+        return contactRepo.save(newContact);
     }
+
 
     @Override
     public List<Contact> getAll() {

@@ -35,6 +35,9 @@ public class Contact {
 
     private String cloudinaryImagePublicId;
 
+    public boolean getFavourite(){
+        return favourite;
+    }
         
     /// mapping with other tables
 

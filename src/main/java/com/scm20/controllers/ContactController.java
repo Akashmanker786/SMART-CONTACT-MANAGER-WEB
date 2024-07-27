@@ -32,6 +32,7 @@ import com.scm20.services.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.var;
 
 @Controller
 @RequestMapping("/user/contacts")
@@ -186,6 +187,71 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
   public String deleteContact(@PathVariable("contactId") String contactId){
     contactService.delete(contactId);
     return "redirect:/user/contacts";
+  }
+
+
+
+  // handler to show updatecontact view 
+  @RequestMapping("/updateView/{contactId}")
+  public String updateView(@PathVariable("contactId") String contactId , Model model){
+    
+    var contact = contactService.getById(contactId);
+
+    ContactFormData contactFormData = new ContactFormData();
+
+    contactFormData.setName(contact.getName());
+    contactFormData.setEmail(contact.getEmail());
+    contactFormData.setPhoneNumber(contact.getPhoneNumber());
+    contactFormData.setAddress(contact.getAddress());
+    contactFormData.setDiscription(contact.getDiscription());
+    contactFormData.setFavourite(contact.getFavourite());
+    contactFormData.setPicture(contact.getPicture());
+
+
+    model.addAttribute("formData",contactFormData);
+    model.addAttribute("contactId",contactId);
+
+    return "user/updateFormView";
+  }
+
+
+  // handler for updating the contact
+  @RequestMapping(value = "updateContact/{contactId}" ,method = RequestMethod.POST)
+  public String updateContact(@PathVariable("contactId") String contactId,
+  @ModelAttribute ContactFormData contactFormData, 
+  Model model){
+
+    var contact = contactService.getById(contactId);
+
+    contact.setId(contactId);
+    contact.setName(contactFormData.getName());
+    contact.setEmail(contactFormData.getEmail());
+    contact.setPhoneNumber(contactFormData.getPhoneNumber());
+    contact.setAddress(contactFormData.getAddress());
+    contact.setDiscription(contactFormData.getDiscription());
+    contact.setFavourite(contactFormData.getFavourite());
+
+    // processing image
+    if(contactFormData.getContactImage()!=null && !contactFormData.getContactImage().isEmpty()){
+      logger.info("contactImage is not null");
+      String fileName = UUID.randomUUID().toString();
+      String fileURL = imageService.uploadImage(contactFormData.getContactImage(), fileName);
+      contact.setCloudinaryImagePublicId(fileName);
+      contact.setPicture(fileURL);
+      contactFormData.setPicture(fileURL);
+    }
+    else{
+      logger.info("contact image is null");
+    }
+    
+
+    var Updatedcon = contactService.update(contact);
+
+    logger.info("updated contact {}",Updatedcon);
+
+    
+
+    return "redirect:/user/contacts/updateView/"+contactId;
   }
 
 }
