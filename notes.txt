@@ -138,10 +138,3 @@ public class SecurityConfig {
 
 }
 
-
-
-scm yt
-
-clint id  =    921867430042-1ikbb6t2atsht0fs48da13qorqo7rla2.apps.googleusercontent.com
-
-secret   =     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
