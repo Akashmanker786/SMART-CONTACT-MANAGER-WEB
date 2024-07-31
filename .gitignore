@@ -37,5 +37,3 @@ build/
 src/main/resources/application.properties
 
 notes.txt
-
-src\test\java\com\scm20\ApplicationTests.java
