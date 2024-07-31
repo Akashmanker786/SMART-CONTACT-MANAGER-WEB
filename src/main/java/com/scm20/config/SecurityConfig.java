@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +18,11 @@ import com.scm20.services.implement.SecurityUserDetailServiceCustom;
 public class SecurityConfig {
 
     @Autowired
+    AuthFailureHandler authFailureHandler;
+
+    @Autowired
     SecurityUserDetailServiceCustom securityUserDetailServiceCustom;
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -32,7 +37,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers("/user/**").authenticated();
-            authorize.requestMatchers("/oauth2/**", "/sign-in", "/").permitAll(); // Allow access to oauth2 endpoints
             authorize.anyRequest().permitAll();
             System.out.println("security filter chain method running");
         });
@@ -43,7 +47,13 @@ public class SecurityConfig {
             formLogin.successForwardUrl("/user/profile");
             formLogin.usernameParameter("email");
             formLogin.passwordParameter("password");
+
+
+            // AuthenticationFailureHandler
+            formLogin.failureHandler(authFailureHandler);
         });
+
+
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
@@ -52,10 +62,9 @@ public class SecurityConfig {
             formLogout.logoutSuccessUrl("/sign-in?logout=true");
         });
 
-        httpSecurity.oauth2Login(oauth -> {
-            oauth.loginPage("/sign-in");
-            oauth.defaultSuccessUrl("/user/dashboard"); // Redirect after successful OAuth2 login
-        });
+       
+        httpSecurity.oauth2Login(Customizer.withDefaults());
+
 
 
         return httpSecurity.build();

@@ -1,0 +1,147 @@
+command for adding css in any page ->
+ npx tailwindcss -i ./src/main/resources/static/css/input.css  -o ./src/main/resources/static/css/output.css --watch
+
+path should be -> cd "D:\My Projects\SCM2.0\SCM2.0"
+
+
+
+
+
+ security config class - >
+
+ package com.scm20.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+import com.scm20.services.implement.SecurityUserDetailServiceCustom;
+
+@Configuration
+public class SecurityConfig {
+
+    // creating the user and implementing the security using in-memmory-service
+
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+
+    //     // creating the user
+    //     UserDetails user1 = User
+    //     .withDefaultPasswordEncoder()
+    //     .username("Akash123")
+    //     .password("Akash123")
+    //     .build();
+
+    //     // creating the user
+    //     UserDetails user2 = User
+    //     .withDefaultPasswordEncoder()
+    //     .username("raj123")
+    //     .password("raj123")
+    //     .build();
+
+
+    //     InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager(user1,user2);
+
+
+    //     return inMemoryUserDetailsManager;
+    // }
+
+
+
+    //  Configuring the actual security
+
+    @Autowired
+    SecurityUserDetailServiceCustom securityUserDetailServiceCustom;
+
+    // @Autowired
+    // OauthAuthenticationSuccessHandler handler;
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+
+        // user detail service ka object
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(securityUserDetailServiceCustom);
+        
+        // password encoder object 
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        
+        System.out.println("authentication provider method is running");
+        return daoAuthenticationProvider;
+    }
+
+
+    // configuring the authorization to  the user 
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+
+        httpSecurity.authorizeHttpRequests(authorize -> {
+            authorize.requestMatchers("/user/**").authenticated();
+            authorize.anyRequest().permitAll();
+            
+            System.out.println("security filter chain method running");
+            
+        });
+
+        // for login Configuration
+
+        httpSecurity.formLogin(formLogin->{
+
+            formLogin.loginPage("/sign-in");
+            formLogin.loginProcessingUrl("/processLogin");
+            formLogin.successForwardUrl("/user/dashboard");
+          // formLogin.failureForwardUrl("/login?error=true");
+            formLogin.usernameParameter("email");
+            formLogin.passwordParameter("password");
+        });
+
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+       
+        // for logout configuration
+           httpSecurity.logout(formlogout->{
+            formlogout.logoutUrl("/do-logout");
+            formlogout.logoutSuccessUrl("/sign-in?logout=true");
+           });
+
+
+        // //  oauth configuration
+        //  httpSecurity.oauth2Login(oauth -> {
+        // oauth.loginPage("/sign-in");
+        // oauth.successHandler(handler);
+        //  });
+        // httpSecurity.oauth2Client(Customizer.withDefaults());
+
+        httpSecurity.oauth2Client(Customizer.withDefaults());
+       
+
+        return httpSecurity.build();
+    }
+    
+    
+
+   
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        System.out.println("password encoder method runnign");
+        return new BCryptPasswordEncoder();
+    }
+
+
+}
+
+
+
+scm yt
+
+clint id  =    921867430042-1ikbb6t2atsht0fs48da13qorqo7rla2.apps.googleusercontent.com
+
+secret   =     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

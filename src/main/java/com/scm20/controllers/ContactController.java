@@ -67,7 +67,7 @@ public String addContact(Model model){
 // method to save add_contact form data
 
 @RequestMapping(value = "/add" , method = RequestMethod.POST)
-public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormData contactFormData , BindingResult result , Authentication authentication , HttpSession session , @RequestParam("picture") MultipartFile contactImage){
+public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormData contactFormData , BindingResult result , Authentication authentication , HttpSession session ){
     
     // validate form
     // if(result.hasErrors()){
@@ -75,14 +75,6 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
     //     return "user/add_contact";
     // }
     // validation logic
-
-    
-    //  process picture
-
-    // creating public id and uploading
-    String fileName = UUID.randomUUID().toString();
-    
-    String fileURL = imageService.uploadImage(contactImage,fileName);
 
 
      String username = HelperClass.getEmailOfLoggedInUser(authentication);
@@ -99,9 +91,19 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
     contact.setPhoneNumber(contactFormData.getPhoneNumber());
     contact.setFavourite(contactFormData.getFavourite());
     contact.setUser(user);
+    
+
+    if(contactFormData.getContactImage() != null && !contactFormData.getContactImage().isEmpty() ){
+
+      //  process picture
+    // creating public id and uploading
+    String fileName = UUID.randomUUID().toString();
+    
+    String fileURL = imageService.uploadImage(contactFormData.getContactImage(),fileName);
+
     contact.setPicture(fileURL);
     contact.setCloudinaryImagePublicId(fileName);
-
+    }
 
 
     System.out.println("Save contact method running...............");
@@ -153,6 +155,8 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
     Model model,
     Authentication authentication
     ){
+
+
 
       User user = userService.getUserByEmail( HelperClass.getEmailOfLoggedInUser(authentication));
       
@@ -219,7 +223,9 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
   @RequestMapping(value = "updateContact/{contactId}" ,method = RequestMethod.POST)
   public String updateContact(@PathVariable("contactId") String contactId,
   @ModelAttribute ContactFormData contactFormData, 
-  Model model){
+  Model model,
+  HttpSession session
+  ){
 
     var contact = contactService.getById(contactId);
 
@@ -249,7 +255,8 @@ public String saveContact(@Valid @ModelAttribute("contactFormData") ContactFormD
 
     logger.info("updated contact {}",Updatedcon);
 
-    
+    session.setAttribute("message",Message.builder().content("Contact Updated Successfully !").type(MessageType.green).build());
+
 
     return "redirect:/user/contacts/updateView/"+contactId;
   }

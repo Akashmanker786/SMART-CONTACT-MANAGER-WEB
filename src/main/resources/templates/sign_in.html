@@ -18,8 +18,7 @@
             <div class="col-span-0 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
     
             <div class="mt-2 col-span-12 md:col-span-8 lg:col-span-6 xl:col-span-4">
-            
-            
+
               <!-- card -->
               <div
                 class="block p-6 border-t-[10px] border-yellow-300 bg-white  rounded-xl shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-yellow-400 dark:hover:bg-gray-700"
@@ -30,8 +29,10 @@
                 Invalid username or password.</div>
             <div th:if="${param.logout}" class="text-green-400">
                 You have been logged out.</div>
-    
-    
+
+                  <!-- message area -->
+          <div th:replace="~{message::messageblock}"></div>
+        
                 <h5
                   class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
                 >
@@ -93,12 +94,12 @@
                 </form>
 
 
-                <div class="social-buttons-container flex justify-center mt-5">
+                <!-- <div class="social-buttons-container flex justify-center mt-5">
                   <a class="px-3 py-2 login-with-google-btn"
                      th:href="@{/oauth2/authorization/google}">
                      Login With Google
                   </a>
-              </div>
+              </div> -->
               
     
     

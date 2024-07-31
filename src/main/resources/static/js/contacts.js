@@ -104,3 +104,16 @@ async function deleteContact(id){
       });
 
 }
+
+
+
+
+// function for exporting the contacts from view_contacts's hidden-table
+function exportContacts() {
+  TableToExcel.convert(document.getElementById("contact-table"), {
+    name: "contacts.xlsx",
+    sheet: {
+      name: "Sheet 1",
+    },
+  });
+}

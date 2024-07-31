@@ -1,0 +1,103 @@
+
+<div th:fragment="dowloadAble-table">
+    
+<table
+id="contact-table"
+th:if="${pageContact.totalElements>0}"
+class=" hidden  w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+>
+<thead
+  class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+>
+  <tr>
+    <th scope="col" class="px-6 py-3">
+      Name
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Email
+      </th>
+    <th scope="col" class="px-6 py-3">
+      Phone
+    </th>
+    <th scope="col" class="px-3 py-3">
+      Favourite
+    </th>
+    <th scope="col" class="px-6 py-3">
+      Action
+    </th>
+  </tr>
+</thead>
+<tbody>
+  <tr
+    th:object="${c}"
+    th:each="c : ${pageContact.getContent()}"
+    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+  >
+    <th
+      scope="row"
+      class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+    >
+      <img
+        class="w-10 h-10 rounded-full"
+        onerror="this.src='https://t4.ftcdn.net/jpg/06/38/85/49/360_F_638854973_hgAF7vx2dRayo1JOUdzgLt8o488gMwjS.jpg'"
+        data-th-src="@{*{picture}}"
+        src="/docs/images/people/profile-picture-1.jpg"
+        alt="Jese image"
+      />
+      <div class="ps-3">
+        <div class="text-base font-semibold" th:text="*{name}">
+          Neil Sims
+        </div>
+       
+      </div>
+    </th>
+
+    <td class="px-6 py-4">
+        <i class="fa-solid fa-phone w-4 h-4"></i>
+        <span th:text="*{email}"></span>
+      </td>
+  
+
+
+    <td class="px-6 py-4">
+      <i class="fa-solid fa-phone w-4 h-4"></i>
+      <span th:text="*{phoneNumber}"></span>
+    </td>
+
+    <td class="px-6 py-4">
+      <div class="flex items-center">
+        <div data-th-if="*{favourite}">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <div data-th-unless="*{favourite}">
+          <i class="fa-solid fa-x"></i>
+        </div>
+      </div>
+    </td>
+
+    <td class="px-6 py-4">
+      <div>
+        <!-- view contact button -->
+        <button th:onclick="loadContactData([[${c.id}]])">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+
+        <!-- update contact button -->
+        <a
+          th:href="'/user/contacts/updateView/'+${c.id}"
+          class="px-0.5"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+
+        <!-- delete contact button -->
+        <button th:onclick="deleteContact([[${c.id}]])">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>

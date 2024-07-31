@@ -10,6 +10,7 @@ import com.scm20.entities.User;
 import com.scm20.formdata.UserRegister;
 import com.scm20.helper.Message;
 import com.scm20.helper.MessageType;
+import com.scm20.services.EmailService;
 import com.scm20.services.implement.UserServiceImpl;
 
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class MyController {
+
  
 	@Autowired
 	UserServiceImpl userServiceImpl;
@@ -46,6 +48,7 @@ public class MyController {
 
 	@RequestMapping("/about")
 	public String aboutHandler(){
+
 		return "about";
 	}
 
@@ -96,8 +99,8 @@ public class MyController {
 		user.setPassword(userData.getPassword());
 		user.setPhoneNumber(userData.getPhoneNumber());
 		user.setAbout(userData.getAbout());
-		user.setProfilePic("https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Fso%2Fdefault&psig=AOvVaw0_LH6nZLsHFCnu5J5zKG-N&ust=1715412435635000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKi19b_HgoYDFQAAAAAdAAAAABAE");
-		
+		user.setProfilePic("https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg");
+		//user.setEnabled(false);
 	
 		//validate the data of the form 
          if(bResult.hasErrors()){
